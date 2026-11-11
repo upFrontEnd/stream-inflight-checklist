@@ -8,7 +8,12 @@
 // (sessionStorage), ou sur ce navigateur si "Rester connecté" est coché (localStorage).
 import { GITHUB_REPO, GITHUB_BRANCH, DATA_FILE } from '../settings.js';
 
-const TOKEN_KEY = 'stream-checklist-github-token';
+const TOKEN_KEY = 'stream-checklist-session';
+
+// Ancienne version (jeton collé à la main, sans login) : ce jeton ne doit plus ouvrir l'admin.
+try {
+  localStorage.removeItem('stream-checklist-github-token');
+} catch {}
 
 export const TOKEN_CREATE_URL =
   'https://github.com/settings/personal-access-tokens/new?' +
