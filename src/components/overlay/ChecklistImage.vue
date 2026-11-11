@@ -3,7 +3,6 @@ import { ref, watch } from 'vue';
 
 const props = defineProps({
   src: { type: String, default: null },
-  border: { type: Object, required: true },
 });
 const emit = defineEmits(['error']);
 
@@ -32,30 +31,5 @@ watch(
 </script>
 
 <template>
-  <img
-    v-if="displayed"
-    class="checklist"
-    :class="{ shown }"
-    :src="displayed"
-    :style="{ borderWidth: `${border.width}px`, borderColor: border.color }"
-    alt=""
-  >
+  <img v-if="displayed" class="checklist" :class="{ shown }" :src="displayed" alt="">
 </template>
-
-<style scoped lang="scss">
-.checklist {
-  display: block;
-  box-sizing: border-box;
-  width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-  object-position: top;
-  border-style: solid;
-  opacity: 0;
-  transition: opacity 0.25s;
-
-  &.shown {
-    opacity: 1;
-  }
-}
-</style>

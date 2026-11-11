@@ -1,0 +1,12 @@
+// DebugPanel.vue
+.debug {
+  position: fixed;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  padding: 8px 10px;
+  font: 13px/1.4 system-ui, sans-serif;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.8);
+  border-radius: 6px;
+}

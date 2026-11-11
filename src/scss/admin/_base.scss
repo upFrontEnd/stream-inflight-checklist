@@ -1,0 +1,49 @@
+// Palette du dashboard stream-command, pour garder la même identité.
+:root {
+  --bg: #0f1115;
+  --surface: #171a21;
+  --surface-alt: #1d212b;
+  --border: #262b35;
+  --text: #e6e8ec;
+  --text-muted: #9aa1ad;
+  --ok: #3ddc84;
+  --standby: #f5a623;
+  --error: #ff5d5d;
+  --accent: #4ea1ff;
+  --accent-dim: rgba(78, 161, 255, 0.12);
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  line-height: 1.45;
+}
+
+code {
+  font-family: ui-monospace, SFMono-Regular, monospace;
+  font-size: 0.85em;
+  background: var(--surface-alt);
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+}
+
+.link {
+  color: var(--accent);
+}
+
+.status {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+
+  &--error {
+    color: var(--error);
+  }
+}

@@ -1,0 +1,10 @@
+// Interface d'administration (admin.html). Aucun style dans les composants : tout est ici.
+@use 'admin/base';
+@use 'admin/layout';
+@use 'admin/forms';
+@use 'admin/chips';
+@use 'admin/panels';
+@use 'admin/family';
+@use 'admin/card';
+@use 'admin/dialog';
+@use 'admin/dropzone';

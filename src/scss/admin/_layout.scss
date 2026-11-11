@@ -1,0 +1,81 @@
+.admin {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1rem 4rem;
+
+  &__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  &__brand {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  &__logo {
+    display: block;
+    height: 52px;
+    width: auto;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 1.5rem;
+  }
+
+  &__subtitle {
+    margin: 0.2rem 0 0;
+    color: var(--text-muted);
+  }
+
+  &__nav {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+  }
+
+  &__toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin: 2rem 0 1rem;
+  }
+
+  &__toolbar-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  &__footer {
+    margin-top: 3rem;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+  }
+}
+
+.banner {
+  margin: 0 0 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border: 1px solid;
+
+  &--ok {
+    color: var(--ok);
+    border-color: rgba(61, 220, 132, 0.35);
+    background: rgba(61, 220, 132, 0.08);
+  }
+
+  &--error {
+    color: var(--error);
+    border-color: rgba(255, 93, 93, 0.35);
+    background: rgba(255, 93, 93, 0.08);
+  }
+}

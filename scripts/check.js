@@ -1,18 +1,18 @@
-// Teste le choix de checklist sans OBS.
+// Teste le choix de checklist sans OBS, avec la liste locale (public/checklists.json).
 //   bun run check              → plan SimBrief actuel
 //   bun run check RYR123 B738  → callsign + type ICAO au choix
-import config from '../config.js';
-import { buildManifest } from './manifest.js';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { SIMBRIEF_PILOT } from '../src/settings.js';
+import { fetchPlan } from '../src/lib/simbrief.js';
 import { pickChecklist, airlineFromPlan, aircraftFromPlan, callsignFromPlan } from '../src/lib/select.js';
 
-const { manifest } = buildManifest(config);
+const data = JSON.parse(readFileSync(join(import.meta.dir, '../public/checklists.json'), 'utf8'));
 let [callsign, aircraft] = process.argv.slice(2);
 let airline;
 
 if (!callsign) {
-  const param = /^\d+$/.test(config.simbrief) ? 'userid' : 'username';
-  const plan = await (await fetch(`https://www.simbrief.com/api/xml.fetcher.php?${param}=${encodeURIComponent(config.simbrief)}&json=1`)).json();
-  if (plan?.fetch?.status !== 'Success') throw new Error(`SimBrief : ${plan?.fetch?.status}`);
+  const plan = await fetchPlan(SIMBRIEF_PILOT);
   callsign = callsignFromPlan(plan);
   aircraft = aircraftFromPlan(plan);
   airline = airlineFromPlan(plan);
@@ -20,7 +20,7 @@ if (!callsign) {
   airline = airlineFromPlan({ atc: { callsign } });
 }
 
-const { path, reason } = pickChecklist(manifest, aircraft ?? '', airline);
+const { checklist, reason } = pickChecklist(data, aircraft ?? '', airline);
 console.log(`${callsign.toUpperCase()} · ${(aircraft ?? '?').toUpperCase()}`);
-console.log(`→ ${path ?? '(rien à afficher)'}`);
+console.log(`→ ${checklist ? `${checklist.label} (${checklist.image})` : '(rien à afficher)'}`);
 console.log(`  ${reason}`);

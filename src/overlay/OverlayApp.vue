@@ -1,10 +1,10 @@
 <script setup>
 import { ref, computed } from 'vue';
-import ChecklistImage from './components/ChecklistImage.vue';
-import DebugPanel from './components/DebugPanel.vue';
-import { useChecklist } from './composables/useChecklist.js';
+import ChecklistImage from '../components/overlay/ChecklistImage.vue';
+import DebugPanel from '../components/overlay/DebugPanel.vue';
+import { useChecklist } from '../composables/useChecklist.js';
 
-const { src, path, flight, error, border } = useChecklist();
+const { src, image, flight, error } = useChecklist();
 const imageError = ref('');
 
 // Hors OBS (navigateur, bun run dev) ou avec ?debug : bandeau de diagnostic.
@@ -13,18 +13,18 @@ const debug = new URLSearchParams(location.search).has('debug') || !window.obsst
 const debugLines = computed(() => {
   const lines = [];
   if (flight.value) lines.push(`${flight.value.callsign} · ${flight.value.aircraft}`, flight.value.reason);
-  lines.push(path.value ?? '(rien à afficher)');
+  lines.push(image.value ?? '(rien à afficher)');
   if (error.value) lines.push(error.value);
   if (imageError.value) lines.push(imageError.value);
   return lines;
 });
 
 function onImageError(url) {
-  imageError.value = `Image introuvable : ${decodeURIComponent(url)} (relancer bun run build ?)`;
+  imageError.value = `Image introuvable : ${url}`;
 }
 </script>
 
 <template>
-  <ChecklistImage :src="src" :border="border" @error="onImageError" />
+  <ChecklistImage :src="src" @error="onImageError" />
   <DebugPanel v-if="debug" :lines="debugLines" />
 </template>

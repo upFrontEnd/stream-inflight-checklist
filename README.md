@@ -1,126 +1,156 @@
-# stream-checklist
+# stream-inflight-checklist
 
 Affiche automatiquement dans OBS la checklist qui correspond au vol du jour :
 compagnie (début du callsign SimBrief, ex. `RYR` pour `RYR4KJ`) + type d'avion
-(`B738`, `A20N`…).
+(`B738`, `A20N`…). Les checklists sont stockées dans le site et se gèrent depuis
+une interface d'administration.
 
-Le bouton qui affiche/masque la source **Checklist** ne change pas : c'est le
-contenu de la source qui s'adapte tout seul.
+| Page    | URL                                                         | Usage                         |
+| ------- | ----------------------------------------------------------- | ----------------------------- |
+| Overlay | `https://upfrontend.github.io/stream-inflight-checklist/`   | Source navigateur OBS 662 × 948 |
+| Admin   | `https://upfrontend.github.io/stream-inflight-checklist/admin.html` | Ajouter / modifier les checklists |
+
+Le bouton qui affiche/masque la source **Checklist** dans OBS ne change pas :
+c'est le contenu de la source qui s'adapte tout seul.
 
 ## Stack
 
 - [Bun](https://bun.sh) : gestionnaire de paquets et runner
-- [Vite](https://vitejs.dev) : bundler, avec `vite-plugin-singlefile` (un seul fichier HTML)
+- [Vite](https://vitejs.dev) : bundler, deux pages (overlay + admin)
 - [Vue 3](https://vuejs.org) : Composition API, `<script setup>`, JavaScript sans TypeScript
-- Sass / SCSS
+- Sass / SCSS : tous les styles dans `src/scss/`, aucun dans les composants
+- GitHub Pages : hébergement, redéployé à chaque commit sur `main`
 
 ## Fonctionnement
 
 ```
-SimBrief (plan du jour)
-   │  general.icao_airline = RYR, aircraft.icaocode = B738
-   ▼
-checklist-auto.html  (source navigateur "Checklist" dans OBS)
-   │  B738 → dossier "BOEING 737Ng", RYR → fichier "... - RYANAIR.png"
-   ▼
-D:/Dropbox/SIMULATION/Checklist et Phraséologie/BOEING 737Ng/checklist 737-800 - RYANAIR.png
+Admin (admin.html) ──commit via l'API GitHub──▶ dépôt : public/checklists.json + public/checklists/*.webp
+                                                    │
+                                     GitHub Actions redéploie le site (~1 min)
+                                                    ▼
+OBS (source navigateur) ── lit ──▶ checklists.json + plan SimBrief ──▶ affiche la bonne image
 ```
 
-- La liste des checklists est scannée dans le Dropbox **au build** (module
-  virtuel `virtual:checklists`) et intégrée à la page.
-- `bun run build` produit un seul fichier HTML (JS et CSS inclus), copié à la
-  racine du dossier Dropbox : OBS le charge en fichier local et lit les images
-  en chemins relatifs.
-- Le plan SimBrief est relu toutes les 60 s et à chaque fois que la source est
-  affichée. La checklist est donc déjà prête quand tu appuies sur le bouton.
-- Pas de checklist pour la compagnie : checklist générique du dossier (ex.
-  `BOEING 737 MAX copie.png`), sinon la première du dossier.
-- Type d'avion sans dossier (ex. A330) : rien ne s'affiche.
-- SimBrief injoignable : la dernière checklist reste affichée.
+- **Overlay** : relit le plan SimBrief **et** la liste des checklists toutes les
+  60 s et à chaque affichage de la source. Une checklist ajoutée dans l'admin
+  apparaît donc dans OBS sans recharger la source.
+- **Choix** : famille d'avion d'après le type (`aircraft.icaocode`), puis la
+  checklist qui porte le code de la compagnie. Sinon la checklist « par défaut »
+  de la famille, sinon une générique (sans code), sinon la première. Type sans
+  famille (ex. A330) : rien ne s'affiche.
+- **SimBrief ou réseau indisponible** : la dernière checklist reste affichée.
 
-## Installation (une fois)
+## Admin
+
+Ouvrir `admin.html`, puis **Connecter GitHub** : la carte donne un lien de
+création de jeton pré-rempli (Contents en écriture, valable 1 an). Choisir
+« Only select repositories » → ce dépôt, coller le jeton. Il reste dans ce
+navigateur uniquement ; « Déconnecter GitHub » l'efface.
+
+- **+ Checklist** : glisser l'image, choisir la famille, taper le nom de la
+  compagnie : son code ICAO est ajouté tout seul s'il est connu, les codes
+  liés sont proposés (ex. Ryanair → RUK, MAY, LDM…). Recherche par nom ou par
+  code dans le champ des codes.
+- **Image** : compressée dans le navigateur avant l'envoi (WebP, 1400 px de large,
+  ~230 Ko au lieu de 3-5 Mo). Garder les originaux dans le Dropbox.
+- **Modifier** : nom, codes, famille, image (l'ancienne est supprimée du dépôt).
+- **Mettre par défaut** : checklist affichée quand la compagnie du vol n'a pas
+  la sienne. Le badge « par défaut » montre celle qui sera utilisée.
+- **+ Famille d'avion** / **Modifier la famille** : nom et types ICAO SimBrief.
+  Une famille ne se supprime que vide.
+- **Tester un vol** : callsign + type, ou « Vol SimBrief actuel », montre la
+  checklist qui sortira dans OBS.
+
+Garde-fous : un code compagnie ne peut viser qu'une checklist par famille, un
+type d'avion qu'une famille. Chaque action est un seul commit ; si le dépôt a
+changé entre-temps, l'admin refuse d'écraser et demande de recharger.
+
+Liste des compagnies proposées : [src/lib/airlines.js](src/lib/airlines.js).
+Une compagnie absente peut toujours être saisie par son code.
+
+## Mise en place (une fois)
+
+1. Sur GitHub : **Settings → Pages → Source : GitHub Actions**.
+2. Pousser le projet sur `main` : le workflow
+   [.github/workflows/deploy.yml](.github/workflows/deploy.yml) publie le site.
+3. OBS fermé : `bun run obs:install`. La source image « Checklist » devient une
+   source navigateur sur l'URL de l'overlay, en gardant nom, position,
+   transitions et bouton. Sauvegarde de l'ancienne config :
+   `Sans_nom.json.avant-checklist-auto` (renommer en `Sans_nom.json` pour revenir
+   en arrière).
+
+Installation manuelle possible à la place : source navigateur nommée
+`Checklist`, URL de l'overlay, 662 × 948, décocher « Arrêter la source quand
+elle n'est pas visible », x 1238 / y 115 à 100 %, et retirer le filtre shader de
+bordure (le cadre est dessiné par la page).
+
+## Commandes
 
 ```bash
 bun install
-bun run build        # génère checklist-auto.html dans le dossier Dropbox
-# fermer OBS
-bun run obs:install  # transforme la source "Checklist" en source navigateur
+bun run dev                 # http://localhost:5190 (overlay) et /admin.html
+bun run build               # site dans dist/
+bun run preview             # sert dist/ en local
+bun run check               # checklist choisie pour le plan SimBrief actuel
+bun run check RYR4KJ B738   # … ou pour un callsign + type au choix
+bun run import              # réimporte tout depuis le Dropbox (écrase l'admin !)
+bun run obs:install         # convertit la source OBS (OBS fermé)
 ```
 
-`obs:install` garde la même source (nom, position, transitions slide, bouton) et
-sauvegarde l'ancienne config à côté (`Sans_nom.json.avant-checklist-auto`).
-Pour revenir en arrière : OBS fermé, renommer ce fichier en `Sans_nom.json`.
+En dev, l'overlay lit `public/checklists.json` local ; l'admin lit et écrit
+toujours dans le dépôt GitHub. Après des modifications faites dans l'admin,
+`git pull` pour les récupérer en local.
 
-Installation manuelle possible à la place : supprimer la source image
-"Checklist", ajouter une **Source navigateur** nommée `Checklist`, cocher
-**Fichier local** → `checklist-auto.html`, largeur 662, hauteur 948, décocher
-"Arrêter la source quand elle n'est pas visible", placer en x 1238 / y 115 à
-100 %.
+Paramètres d'URL de l'overlay :
 
-## Développement
-
-```bash
-bun run dev
-```
-
-Ouvre `http://localhost:5190` avec un bandeau de diagnostic (callsign, type,
-fichier choisi, erreurs). Les images sont servies directement depuis le
-Dropbox sous `/checklists/`, et la page se recharge quand une checklist est
-ajoutée ou supprimée.
-
-Paramètres d'URL (dev ou page buildée ouverte dans un navigateur) :
-
-| Paramètre            | Effet                                               |
-| -------------------- | --------------------------------------------------- |
-| `?test=RYR4KJ,B738`  | Simule un vol sans toucher au plan SimBrief         |
-| `?simbrief=pseudo`   | Autre compte SimBrief que celui de `config.js`      |
-| `?debug`             | Force le bandeau de diagnostic (il est masqué dans OBS) |
-
-Une modification du code ne change OBS qu'après `bun run build`.
-
-## Ajouter une checklist
-
-1. Déposer l'image dans le bon dossier, avec le nom de la compagnie dans le nom
-   du fichier : `Airbus A-320 - VUELING.png`.
-2. Si la compagnie n'est pas encore connue, soit ajouter son code dans
-   `airlines` de [config.js](config.js) (`VLG: ['VUELING']`), soit mettre le
-   code dans le nom du fichier : `Airbus A-320 - VUELING (VLG).png`.
-3. `bun run build` (OBS peut rester ouvert ; la source se met à jour à son
-   prochain rechargement, ou clic droit → Actualiser).
-
-Nouveau dossier (nouvelle famille d'avion) : l'ajouter dans `folders` de
-[config.js](config.js) avec ses types ICAO SimBrief.
-
-## Tester en ligne de commande
-
-```bash
-bun run check               # plan SimBrief actuel
-bun run check RYR4KJ B738   # callsign + type au choix
-```
+| Paramètre            | Effet                                                  |
+| -------------------- | ------------------------------------------------------ |
+| `?test=RYR4KJ,B738`  | Simule un vol sans toucher au plan SimBrief            |
+| `?simbrief=pseudo`   | Autre compte SimBrief que celui de `src/settings.js`   |
+| `?debug`             | Bandeau de diagnostic (affiché d'office hors OBS)      |
 
 ## Structure
 
 ```
-config.js                     Réglages : dossier, compte SimBrief, types par dossier, compagnies
-index.html                    Point d'entrée Vite
-vite.config.js                Config Vite (base relative, single file, plugin checklists)
-vite/
-└── checklists-plugin.js      Module virtuel, images en dev, copie du build dans le Dropbox
+index.html / admin.html        Points d'entrée Vite (overlay OBS / admin)
+vite.config.js                 Deux pages, chemins relatifs pour GitHub Pages
+public/
+├── checklists.json            Familles d'avion + checklists (écrit par l'admin)
+└── checklists/*.webp          Images (nom suffixé d'une empreinte : pas de vieux cache)
 src/
-├── main.js                   Entrée Vue
-├── App.vue                   Assemble l'image et le bandeau de diagnostic
+├── settings.js                Compte SimBrief, dépôt, compression
+├── overlay/                   OverlayApp.vue + main.js
+├── admin/                     AdminApp.vue + main.js
 ├── components/
-│   ├── ChecklistImage.vue    Image préchargée, fondu, cadre
-│   └── DebugPanel.vue        Bandeau de diagnostic
+│   ├── overlay/               ChecklistImage, DebugPanel
+│   └── admin/                 TokenCard, TestPanel, FamilySection, ChecklistCard,
+│                              ChecklistDialog, FamilyDialog, BaseDialog, ImageDrop, CodesInput
 ├── composables/
-│   ├── useSimbrief.js        Lecture du plan SimBrief (intervalle + visibilité OBS)
-│   └── useChecklist.js       Choix de la checklist, cache de la dernière affichée
+│   ├── useChecklist.js        Overlay : relecture SimBrief + liste, choix, cache
+│   └── useAdminStore.js       Admin : état partagé et actions (commit GitHub)
 ├── lib/
-│   └── select.js             Règles de choix (partagées avec bun run check)
+│   ├── select.js              Règles de choix (overlay, admin, bun run check)
+│   ├── github.js              API GitHub : jeton, lecture, commit unique
+│   ├── image.js               Compression WebP dans le navigateur
+│   ├── simbrief.js            Lecture du plan SimBrief
+│   ├── airlines.js            Compagnies connues (code ICAO → nom)
+│   └── slug.js
+├── img/logo.png
 └── scss/
-    └── style.scss            Styles globaux (fond transparent)
+    ├── overlay.scss / admin.scss   Points d'entrée
+    ├── _variables.scss              Cadre de la checklist, fondu
+    ├── overlay/                     _base, _checklist, _debug
+    └── admin/                       _base, _layout, _forms, _chips, _panels,
+                                     _family, _card, _dialog, _dropzone
 scripts/
-├── manifest.js               Scanne les checklists et associe chaque image à ses compagnies
-├── check.js                  Test en ligne de commande
-└── install-obs.js            Conversion de la source OBS
+├── import-dropbox.js          Import initial depuis le Dropbox (sharp)
+├── check.js                   Test en ligne de commande
+└── install-obs.js             Conversion de la source OBS
 ```
+
+## Limites
+
+- Le site est public : toute personne qui a l'URL voit les checklists.
+- Une modification met ~1 min à arriver dans OBS (redéploiement GitHub Pages).
+- Les aperçus de l'admin passent par `raw.githubusercontent.com` (le dépôt doit
+  être public), pour voir une image tout de suite sans attendre le déploiement.

@@ -1,0 +1,406 @@
+{
+  "families": [
+    {
+      "id": "a320",
+      "name": "Airbus A320",
+      "types": [
+        "A318",
+        "A319",
+        "A320",
+        "A321",
+        "A19N",
+        "A20N",
+        "A21N"
+      ]
+    },
+    {
+      "id": "b737ng",
+      "name": "Boeing 737 NG",
+      "types": [
+        "B736",
+        "B737",
+        "B738",
+        "B739"
+      ]
+    },
+    {
+      "id": "b737max",
+      "name": "Boeing 737 MAX",
+      "types": [
+        "B37M",
+        "B38M",
+        "B39M",
+        "B3XM"
+      ]
+    },
+    {
+      "id": "ejet",
+      "name": "Embraer E-Jet",
+      "types": [
+        "E170",
+        "E75S",
+        "E75L",
+        "E190",
+        "E195",
+        "E290",
+        "E295"
+      ]
+    },
+    {
+      "id": "a300-a310",
+      "name": "Airbus A300 / A310",
+      "types": [
+        "A306",
+        "A30B",
+        "A310"
+      ]
+    },
+    {
+      "id": "a340",
+      "name": "Airbus A340",
+      "types": [
+        "A342",
+        "A343",
+        "A345",
+        "A346"
+      ]
+    }
+  ],
+  "checklists": [
+    {
+      "id": "a320-aer-lingus",
+      "family": "a320",
+      "label": "Aer Lingus",
+      "airlines": [
+        "EIN",
+        "EUK"
+      ],
+      "image": "checklists/a320-aer-lingus-888db7bd.webp",
+      "default": false
+    },
+    {
+      "id": "a320-air-france",
+      "family": "a320",
+      "label": "Air France",
+      "airlines": [
+        "AFR"
+      ],
+      "image": "checklists/a320-air-france-81471efb.webp",
+      "default": false
+    },
+    {
+      "id": "a320-british-airways",
+      "family": "a320",
+      "label": "British Airways",
+      "airlines": [
+        "BAW",
+        "EFW",
+        "SHT"
+      ],
+      "image": "checklists/a320-british-airways-d08be535.webp",
+      "default": false
+    },
+    {
+      "id": "a320-easyjet",
+      "family": "a320",
+      "label": "easyJet",
+      "airlines": [
+        "EJU",
+        "EZS",
+        "EZY"
+      ],
+      "image": "checklists/a320-easyjet-abc22eda.webp",
+      "default": false
+    },
+    {
+      "id": "a320-eurowings",
+      "family": "a320",
+      "label": "Eurowings",
+      "airlines": [
+        "EWG",
+        "EWL"
+      ],
+      "image": "checklists/a320-eurowings-350802ac.webp",
+      "default": false
+    },
+    {
+      "id": "a320-iberia",
+      "family": "a320",
+      "label": "Iberia",
+      "airlines": [
+        "IBE",
+        "IBS"
+      ],
+      "image": "checklists/a320-iberia-9744de5e.webp",
+      "default": false
+    },
+    {
+      "id": "a320-latam",
+      "family": "a320",
+      "label": "LATAM",
+      "airlines": [
+        "ARE",
+        "LAN",
+        "LNE",
+        "LPE",
+        "LXP",
+        "TAM"
+      ],
+      "image": "checklists/a320-latam-3a5bfd77.webp",
+      "default": false
+    },
+    {
+      "id": "a320-swiss",
+      "family": "a320",
+      "label": "Swiss",
+      "airlines": [
+        "SWR"
+      ],
+      "image": "checklists/a320-swiss-163fbec9.webp",
+      "default": false
+    },
+    {
+      "id": "a320-air-serbia",
+      "family": "a320",
+      "label": "Air Serbia",
+      "airlines": [
+        "ASL"
+      ],
+      "image": "checklists/a320-air-serbia-3b438dac.webp",
+      "default": false
+    },
+    {
+      "id": "a320-airasia",
+      "family": "a320",
+      "label": "AirAsia",
+      "airlines": [
+        "AIQ",
+        "APG",
+        "AWQ",
+        "AXM"
+      ],
+      "image": "checklists/a320-airasia-242abf31.webp",
+      "default": false
+    },
+    {
+      "id": "a320-aeroflot",
+      "family": "a320",
+      "label": "Aeroflot",
+      "airlines": [
+        "AFL"
+      ],
+      "image": "checklists/a320-aeroflot-d36938f4.webp",
+      "default": false
+    },
+    {
+      "id": "a320-air-seychelles",
+      "family": "a320",
+      "label": "Air Seychelles",
+      "airlines": [
+        "SEY"
+      ],
+      "image": "checklists/a320-air-seychelles-d5e5839a.webp",
+      "default": false
+    },
+    {
+      "id": "a320-ana",
+      "family": "a320",
+      "label": "ANA",
+      "airlines": [
+        "ANA"
+      ],
+      "image": "checklists/a320-ana-3468f881.webp",
+      "default": false
+    },
+    {
+      "id": "a320-china-eastern",
+      "family": "a320",
+      "label": "China Eastern",
+      "airlines": [
+        "CES"
+      ],
+      "image": "checklists/a320-china-eastern-ce8859a9.webp",
+      "default": false
+    },
+    {
+      "id": "a320-lufthansa",
+      "family": "a320",
+      "label": "Lufthansa",
+      "airlines": [
+        "CLH",
+        "DLH"
+      ],
+      "image": "checklists/a320-lufthansa-68d8d1c1.webp",
+      "default": false
+    },
+    {
+      "id": "a320-qatar-airways",
+      "family": "a320",
+      "label": "Qatar Airways",
+      "airlines": [
+        "QTR"
+      ],
+      "image": "checklists/a320-qatar-airways-2c42e4d9.webp",
+      "default": false
+    },
+    {
+      "id": "a320-thai-airways",
+      "family": "a320",
+      "label": "Thai Airways",
+      "airlines": [
+        "THA"
+      ],
+      "image": "checklists/a320-thai-airways-4c910ba0.webp",
+      "default": false
+    },
+    {
+      "id": "b737ng-air-algerie",
+      "family": "b737ng",
+      "label": "Air Algérie",
+      "airlines": [
+        "DAH"
+      ],
+      "image": "checklists/b737ng-air-algerie-358764b1.webp",
+      "default": false
+    },
+    {
+      "id": "b737ng-air-europa",
+      "family": "b737ng",
+      "label": "Air Europa",
+      "airlines": [
+        "AEA"
+      ],
+      "image": "checklists/b737ng-air-europa-01f1bd48.webp",
+      "default": false
+    },
+    {
+      "id": "b737ng-alaska-airlines",
+      "family": "b737ng",
+      "label": "Alaska Airlines",
+      "airlines": [
+        "ASA"
+      ],
+      "image": "checklists/b737ng-alaska-airlines-72d4308e.webp",
+      "default": false
+    },
+    {
+      "id": "b737ng-asl",
+      "family": "b737ng",
+      "label": "ASL",
+      "airlines": [
+        "ABR",
+        "FPO",
+        "TAY"
+      ],
+      "image": "checklists/b737ng-asl-68396247.webp",
+      "default": false
+    },
+    {
+      "id": "b737ng-norwegian",
+      "family": "b737ng",
+      "label": "Norwegian",
+      "airlines": [
+        "IBK",
+        "NAX",
+        "NOZ",
+        "NSZ"
+      ],
+      "image": "checklists/b737ng-norwegian-09b4b888.webp",
+      "default": false
+    },
+    {
+      "id": "b737ng-ryanair",
+      "family": "b737ng",
+      "label": "Ryanair",
+      "airlines": [
+        "LDM",
+        "MAY",
+        "RUK",
+        "RYR",
+        "RYS"
+      ],
+      "image": "checklists/b737ng-ryanair-a49dbb29.webp",
+      "default": false
+    },
+    {
+      "id": "b737ng-tarom",
+      "family": "b737ng",
+      "label": "TAROM",
+      "airlines": [
+        "ROT"
+      ],
+      "image": "checklists/b737ng-tarom-f3d5bbad.webp",
+      "default": false
+    },
+    {
+      "id": "b737ng-transavia",
+      "family": "b737ng",
+      "label": "Transavia",
+      "airlines": [
+        "TRA",
+        "TVF"
+      ],
+      "image": "checklists/b737ng-transavia-c2369290.webp",
+      "default": false
+    },
+    {
+      "id": "b737ng-turkish-airlines",
+      "family": "b737ng",
+      "label": "Turkish Airlines",
+      "airlines": [
+        "THY"
+      ],
+      "image": "checklists/b737ng-turkish-airlines-2d7e3e3e.webp",
+      "default": false
+    },
+    {
+      "id": "b737ng-united-airlines",
+      "family": "b737ng",
+      "label": "United Airlines",
+      "airlines": [
+        "UAL"
+      ],
+      "image": "checklists/b737ng-united-airlines-ef457c10.webp",
+      "default": false
+    },
+    {
+      "id": "b737max-generique",
+      "family": "b737max",
+      "label": "Générique",
+      "airlines": [],
+      "image": "checklists/b737max-generique-1cea7ffc.webp",
+      "default": false
+    },
+    {
+      "id": "ejet-generique",
+      "family": "ejet",
+      "label": "Générique",
+      "airlines": [],
+      "image": "checklists/ejet-generique-b98090c2.webp",
+      "default": false
+    },
+    {
+      "id": "a300-a310-dhl",
+      "family": "a300-a310",
+      "label": "DHL",
+      "airlines": [
+        "BCS",
+        "DAE",
+        "DHK",
+        "DHX"
+      ],
+      "image": "checklists/a300-a310-dhl-0c2f21c6.webp",
+      "default": false
+    },
+    {
+      "id": "a300-a310-fedex",
+      "family": "a300-a310",
+      "label": "FedEx",
+      "airlines": [
+        "FDX"
+      ],
+      "image": "checklists/a300-a310-fedex-68d86bd1.webp",
+      "default": false
+    }
+  ]
+}
