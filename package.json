@@ -1,0 +1,20 @@
+{
+  "name": "stream-checklist",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "bunx --bun vite --open",
+    "build": "bunx --bun vite build",
+    "check": "bun scripts/check.js",
+    "obs:install": "bun scripts/install-obs.js"
+  },
+  "dependencies": {
+    "vue": "^3.5.45"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.10",
+    "sass": "^1.108.2",
+    "vite": "^8.3.8",
+    "vite-plugin-singlefile": "^2.3.4"
+  }
+}
