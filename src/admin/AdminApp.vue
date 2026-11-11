@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
-import TokenCard from '../components/admin/TokenCard.vue';
+import LoginCard from '../components/admin/LoginCard.vue';
 import TestPanel from '../components/admin/TestPanel.vue';
 import FamilySection from '../components/admin/FamilySection.vue';
 import ChecklistDialog from '../components/admin/ChecklistDialog.vue';
@@ -52,11 +52,11 @@ onMounted(store.load);
       </div>
       <nav v-if="connected" class="admin__nav">
         <a class="link" :href="overlayUrl" target="_blank" rel="noopener">Voir l'overlay</a>
-        <button type="button" class="link-button" @click="store.disconnect">Déconnecter GitHub</button>
+        <button type="button" class="link-button" @click="store.logout">Se déconnecter</button>
       </nav>
     </header>
 
-    <TokenCard v-if="!connected" />
+    <LoginCard v-if="!connected" />
 
     <template v-else>
       <p v-if="notice" class="banner banner--ok">{{ notice }}</p>

@@ -1,5 +1,6 @@
 import { ref, computed } from 'vue';
 import { readData, commitData, getToken, setToken, verifyToken } from '../lib/github.js';
+import { decryptToken } from '../lib/vault.js';
 import { compressImage, blobToBase64, shortHash } from '../lib/image.js';
 import { slugify } from '../lib/slug.js';
 import { IMAGES_DIR } from '../settings.js';
@@ -74,22 +75,34 @@ async function load() {
   try {
     data.value = await readData();
   } catch (err) {
+    // Jeton expiré ou révoqué : retour à l'écran de connexion.
+    if (err.status === 401) logout();
     error.value = err.message;
   } finally {
     loading.value = false;
   }
 }
 
-async function connect(newToken) {
+// Jeton GitHub chiffré, publié avec le site (créé par bun run admin:password).
+async function fetchVault() {
+  const res = await fetch(`${import.meta.env.BASE_URL}admin-auth.json`, { cache: 'no-store' });
+  if (res.status === 404) throw new Error('Aucun login configuré : lance bun run admin:password, puis commite public/admin-auth.json.');
+  if (!res.ok) throw new Error(`Connexion impossible (HTTP ${res.status}).`);
+  return res.json();
+}
+
+async function login(username, password, { remember = false } = {}) {
   error.value = '';
   try {
-    await verifyToken(newToken.trim());
+    const secret = await decryptToken(username, password, await fetchVault());
+    if (!secret) throw new Error('Login ou mot de passe incorrect.');
+    await verifyToken(secret);
+    setToken(secret, { remember });
+    token.value = secret;
   } catch (err) {
     error.value = err.message;
     return false;
   }
-  setToken(newToken.trim());
-  token.value = newToken.trim();
   await load();
   return true;
 }
@@ -99,7 +112,7 @@ function clearMessages() {
   notice.value = '';
 }
 
-function disconnect() {
+function logout() {
   setToken('');
   token.value = '';
   data.value = null;
@@ -199,7 +212,7 @@ function removeFamily(id) {
 export function useAdminStore() {
   return {
     data, token, connected, loading, saving, error, notice,
-    load, connect, disconnect, clearMessages,
+    load, login, logout, clearMessages,
     addChecklist, updateChecklist, removeChecklist, setDefault,
     addFamily, updateFamily, removeFamily,
   };

@@ -2,8 +2,10 @@
 // Chaque modification = un seul commit (image + checklists.json ensemble), ce qui
 // déclenche un seul redéploiement GitHub Pages.
 //
-// Jeton GitHub "fine-grained" limité à ce dépôt (Contents en écriture), collé une
-// fois dans l'admin. Il reste dans ce navigateur (localStorage), jamais dans le site.
+// Jeton GitHub "fine-grained" limité à ce dépôt (Contents en écriture). Il est publié
+// chiffré (public/admin-auth.json, voir vault.js) et déchiffré à la connexion avec le
+// login / mot de passe. Une fois déchiffré, il est gardé pour la session de l'onglet
+// (sessionStorage), ou sur ce navigateur si "Rester connecté" est coché (localStorage).
 import { GITHUB_REPO, GITHUB_BRANCH, DATA_FILE } from '../settings.js';
 
 const TOKEN_KEY = 'stream-checklist-github-token';
@@ -11,7 +13,8 @@ const TOKEN_KEY = 'stream-checklist-github-token';
 export const TOKEN_CREATE_URL =
   'https://github.com/settings/personal-access-tokens/new?' +
   new URLSearchParams({
-    name: 'Admin checklists',
+    // Daté : GitHub refuse deux jetons du même nom (ex. au renouvellement annuel).
+    name: `Admin checklists ${new Date().toISOString().slice(0, 10)}`,
     description: 'Gérer les checklists depuis l\'admin stream-inflight-checklist',
     target_name: GITHUB_REPO.split('/')[0],
     expires_in: '366', // maximum hors "jamais" : à recréer une fois par an
@@ -20,23 +23,25 @@ export const TOKEN_CREATE_URL =
 
 export function getToken() {
   try {
-    return localStorage.getItem(TOKEN_KEY) ?? '';
+    return sessionStorage.getItem(TOKEN_KEY) ?? localStorage.getItem(TOKEN_KEY) ?? '';
   } catch {
     return '';
   }
 }
 
-export function setToken(token) {
+// token vide : déconnexion (efface les deux stockages).
+export function setToken(token, { remember = false } = {}) {
   try {
-    if (token) localStorage.setItem(TOKEN_KEY, token);
-    else localStorage.removeItem(TOKEN_KEY);
+    sessionStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(TOKEN_KEY);
+    if (token) (remember ? localStorage : sessionStorage).setItem(TOKEN_KEY, token);
   } catch {
-    // stockage indisponible (navigation privée...) : le jeton ne sera pas mémorisé
+    // stockage indisponible (navigation privée...) : connexion valable jusqu'au rechargement
   }
 }
 
 const ERROR_BY_STATUS = {
-  401: 'Jeton GitHub invalide ou expiré : reconnecte-toi avec un nouveau jeton.',
+  401: 'Jeton GitHub expiré ou révoqué : crée-en un nouveau avec bun run admin:password.',
   403: 'Jeton GitHub sans les bonnes permissions (Contents en écriture sur ce dépôt).',
   404: 'Dépôt introuvable avec ce jeton : vérifie qu\'il donne accès à ce dépôt.',
   409: 'Les checklists ont changé entre-temps : recharge la page et recommence.',

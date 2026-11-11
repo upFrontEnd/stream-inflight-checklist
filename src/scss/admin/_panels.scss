@@ -18,23 +18,10 @@
   }
 }
 
-// TokenCard.vue
-.token {
-  max-width: 640px;
-
-  &__steps {
-    margin: 0;
-    padding-left: 1.25rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
-    color: var(--text-muted);
-  }
-
-  &__row {
-    display: flex;
-    gap: 0.5rem;
-  }
+// LoginCard.vue
+.login {
+  max-width: 380px;
+  margin: 3rem auto 0;
 }
 
 // TestPanel.vue

@@ -42,10 +42,28 @@ OBS (source navigateur) ── lit ──▶ checklists.json + plan SimBrief ─
 
 ## Admin
 
-Ouvrir `admin.html`, puis **Connecter GitHub** : la carte donne un lien de
-création de jeton pré-rempli (Contents en écriture, valable 1 an). Choisir
-« Only select repositories » → ce dépôt, coller le jeton. Il reste dans ce
-navigateur uniquement ; « Déconnecter GitHub » l'efface.
+Accès par **login + mot de passe**. Le site n'ayant pas de serveur, le jeton
+GitHub qui permet d'écrire dans le dépôt est publié **chiffré** avec ces
+identifiants (`public/admin-auth.json`, PBKDF2 600 000 itérations + AES-GCM) ;
+la page le déchiffre à la connexion. Sans le bon couple, le fichier est
+illisible : d'où le mot de passe de 12 caractères minimum.
+
+```bash
+bun run admin:password   # crée ou change le login / mot de passe
+```
+
+- Première fois : le script donne le lien de création du jeton GitHub
+  (pré-rempli : Contents en écriture, valable 1 an ; choisir « Only select
+  repositories » → ce dépôt), demande le jeton, le vérifie, puis le login et le
+  mot de passe (saisie masquée).
+- Changer de mot de passe : relancer, répondre « O » pour garder le jeton
+  actuel (ancien login / mot de passe demandés).
+- Jeton expiré (au bout d'un an) : relancer, répondre « n », coller le nouveau.
+- Dans tous les cas : commiter et pousser `public/admin-auth.json`. Le nouveau
+  login marche après le déploiement (~1 min).
+
+Connexion valable le temps de l'onglet, ou sur ce navigateur avec « Rester
+connecté ». « Se déconnecter » efface le jeton du navigateur.
 
 - **+ Checklist** : glisser l'image, choisir la famille, taper le nom de la
   compagnie : son code ICAO est ajouté tout seul s'il est connu, les codes
@@ -94,7 +112,8 @@ bun run preview             # sert dist/ en local
 bun run check               # checklist choisie pour le plan SimBrief actuel
 bun run check RYR4KJ B738   # … ou pour un callsign + type au choix
 bun run import              # réimporte tout depuis le Dropbox (écrase l'admin !)
-bun run obs:install         # convertit la source OBS (OBS fermé)
+bun run obs:install         # convertit la source OBS (OBS fermé, une seule fois)
+bun run admin:password      # login / mot de passe de l'admin
 ```
 
 En dev, l'overlay lit `public/checklists.json` local ; l'admin lit et écrit
@@ -115,6 +134,7 @@ Paramètres d'URL de l'overlay :
 index.html / admin.html        Points d'entrée Vite (overlay OBS / admin)
 vite.config.js                 Deux pages, chemins relatifs pour GitHub Pages
 public/
+├── admin-auth.json            Jeton GitHub chiffré (bun run admin:password)
 ├── checklists.json            Familles d'avion + checklists (écrit par l'admin)
 └── checklists/*.webp          Images (nom suffixé d'une empreinte : pas de vieux cache)
 src/
@@ -123,7 +143,7 @@ src/
 ├── admin/                     AdminApp.vue + main.js
 ├── components/
 │   ├── overlay/               ChecklistImage, DebugPanel
-│   └── admin/                 TokenCard, TestPanel, FamilySection, ChecklistCard,
+│   └── admin/                 LoginCard, TestPanel, FamilySection, ChecklistCard,
 │                              ChecklistDialog, FamilyDialog, BaseDialog, ImageDrop, CodesInput
 ├── composables/
 │   ├── useChecklist.js        Overlay : relecture SimBrief + liste, choix, cache
@@ -131,6 +151,7 @@ src/
 ├── lib/
 │   ├── select.js              Règles de choix (overlay, admin, bun run check)
 │   ├── github.js              API GitHub : jeton, lecture, commit unique
+│   ├── vault.js               Chiffrement du jeton avec login / mot de passe
 │   ├── image.js               Compression WebP dans le navigateur
 │   ├── simbrief.js            Lecture du plan SimBrief
 │   ├── airlines.js            Compagnies connues (code ICAO → nom)
@@ -144,13 +165,16 @@ src/
                                      _family, _card, _dialog, _dropzone
 scripts/
 ├── import-dropbox.js          Import initial depuis le Dropbox (sharp)
+├── admin-password.js          Login / mot de passe de l'admin
 ├── check.js                   Test en ligne de commande
 └── install-obs.js             Conversion de la source OBS
 ```
 
 ## Limites
 
-- Le site est public : toute personne qui a l'URL voit les checklists.
+- Le site est public : toute personne qui a l'URL voit les checklists (pas l'admin).
+- Le jeton chiffré est public : sa sécurité repose sur la force du mot de passe.
+  Pas de limite de tentatives possible sans serveur.
 - Une modification met ~1 min à arriver dans OBS (redéploiement GitHub Pages).
 - Les aperçus de l'admin passent par `raw.githubusercontent.com` (le dépôt doit
   être public), pour voir une image tout de suite sans attendre le déploiement.

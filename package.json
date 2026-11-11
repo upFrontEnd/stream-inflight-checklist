@@ -8,7 +8,8 @@
     "preview": "bunx --bun vite preview --open",
     "check": "bun scripts/check.js",
     "import": "bun scripts/import-dropbox.js",
-    "obs:install": "bun scripts/install-obs.js"
+    "obs:install": "bun scripts/install-obs.js",
+    "admin:password": "bun scripts/admin-password.js"
   },
   "dependencies": {
     "vue": "^3.5.45"
