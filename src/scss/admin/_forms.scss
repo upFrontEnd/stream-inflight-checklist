@@ -36,6 +36,29 @@
   }
 }
 
+// Boutons repris de l'admin du site Skyflyer Aviation (src/styles/components/_buttons.scss).
+.btn {
+  display: block;
+  width: max-content;
+  padding: 0.5rem 1rem;
+  border: 0;
+  border-radius: 0.3125rem;
+  color: #ffffff;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+
+  &--error {
+    background-color: #ff0000;
+  }
+
+  &--success {
+    background-color: #03a909;
+  }
+}
+
 .link-button {
   background: none;
   border: none;

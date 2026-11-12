@@ -25,8 +25,8 @@ const emit = defineEmits(['edit', 'make-default']);
         <span v-if="!checklist.airlines.length" class="card__muted">générique</span>
       </div>
       <div class="card__actions">
-        <button type="button" class="link-button" @click="emit('edit')">Modifier</button>
-        <button v-if="!checklist.default" type="button" class="link-button" @click="emit('make-default')">Mettre par défaut</button>
+        <button type="button" class="button button--ghost button--small" @click="emit('edit')">Modifier</button>
+        <button v-if="!checklist.default" type="button" class="button button--ghost button--small" @click="emit('make-default')">Défaut</button>
       </div>
     </div>
   </article>

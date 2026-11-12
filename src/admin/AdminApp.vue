@@ -46,13 +46,11 @@ onMounted(store.load);
       <div class="admin__brand">
         <img class="admin__logo" :src="logo" alt="Skyflyer Aviation">
         <div>
-          <h1 class="admin__title">Checklists</h1>
-          <p class="admin__subtitle">Choisies automatiquement dans OBS d'après le callsign et l'avion du plan SimBrief.</p>
-        </div>
+          <h1 class="admin__title">Checklists Administration</h1>        </div>
       </div>
       <nav v-if="connected" class="admin__nav">
-        <a class="link" :href="overlayUrl" target="_blank" rel="noopener">Voir l'overlay</a>
-        <button type="button" class="link-button" @click="store.logout">Se déconnecter</button>
+        <a class="btn btn--success" :href="overlayUrl" target="_blank" rel="noopener">Checklist Active</a>
+        <button type="button" class="btn btn--error" @click="store.logout">Se déconnecter</button>
       </nav>
     </header>
 
