@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, watch, onUnmounted } from 'vue';
 import { formatSize } from '../../lib/image.js';
+import AdminIcon from './AdminIcon.vue';
 
 const props = defineProps({
   // Image actuelle (URL), affichée tant qu'aucun nouveau fichier n'est choisi.
@@ -44,10 +45,20 @@ function onDrop(e) {
     @drop.prevent="onDrop"
   >
     <img v-if="shown" class="dropzone__preview" :src="shown" alt="">
+    <span v-else class="dropzone__icon"><AdminIcon name="upload" :size="22" /></span>
     <div class="dropzone__text">
-      <template v-if="file">{{ file.name }} · {{ formatSize(file.size) }} (compressée à l'envoi)</template>
-      <template v-else-if="current">Glisser une image pour la remplacer, ou cliquer</template>
-      <template v-else>Glisser l'image de la checklist ici, ou cliquer pour parcourir</template>
+      <template v-if="file">
+        <strong>{{ file.name }}</strong>
+        <span>{{ formatSize(file.size) }} · compressée à l'envoi</span>
+      </template>
+      <template v-else-if="current">
+        <strong>Image actuelle</strong>
+        <span>Glisse une image pour la remplacer, ou clique</span>
+      </template>
+      <template v-else>
+        <strong>Glisse l'image de la checklist ici</strong>
+        <span>ou clique pour parcourir · PNG, JPEG, WebP</span>
+      </template>
     </div>
     <input ref="input" type="file" accept="image/png,image/jpeg,image/webp" hidden @change="pick($event.target.files)">
   </div>

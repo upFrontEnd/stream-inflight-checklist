@@ -3,6 +3,7 @@ import { ref, computed, watch } from 'vue';
 import BaseDialog from './BaseDialog.vue';
 import ImageDrop from './ImageDrop.vue';
 import CodesInput from './CodesInput.vue';
+import AdminIcon from './AdminIcon.vue';
 import { AIRLINES } from '../../lib/airlines.js';
 import { rawUrl } from '../../lib/github.js';
 import { useAdminStore } from '../../composables/useAdminStore.js';
@@ -67,27 +68,36 @@ async function remove() {
 </script>
 
 <template>
-  <BaseDialog :title="checklist ? `Modifier « ${checklist.label} »` : 'Ajouter une checklist'" @close="emit('close')">
-    <form class="form" @submit.prevent="submit">
-      <ImageDrop v-model="form.file" :current="checklist ? rawUrl(checklist.image) : null" />
+  <BaseDialog
+    :title="checklist ? `Modifier « ${checklist.label} »` : 'Ajouter une checklist'"
+    subtitle="L'image est compressée en WebP puis publiée sur GitHub."
+    @close="emit('close')"
+  >
+    <form class="fields" @submit.prevent="submit">
+      <div class="field">
+        <span class="field__label">Image</span>
+        <ImageDrop v-model="form.file" :current="checklist ? rawUrl(checklist.image) : null" />
+      </div>
 
-      <label class="field">
-        <span class="field__label">Famille d'avion</span>
-        <select v-model="form.family" class="field__control">
-          <option v-for="f in families" :key="f.id" :value="f.id">{{ f.name }} ({{ f.types.join(', ') }})</option>
-        </select>
-      </label>
+      <div class="field-row">
+        <div class="field">
+          <label class="field__label" for="checklist-family">Famille d'avion</label>
+          <select id="checklist-family" v-model="form.family" class="input">
+            <option v-for="f in families" :key="f.id" :value="f.id">{{ f.name }}</option>
+          </select>
+        </div>
 
-      <label class="field">
-        <span class="field__label">Nom affiché (compagnie, ou « Générique »)</span>
-        <input v-model="form.label" class="field__control" list="airline-names" placeholder="Ryanair">
-        <datalist id="airline-names">
-          <option v-for="a in AIRLINES" :key="a.icao" :value="a.name" />
-        </datalist>
-      </label>
+        <div class="field">
+          <label class="field__label" for="checklist-label">Nom affiché</label>
+          <input id="checklist-label" v-model="form.label" class="input" list="airline-names" placeholder="Ryanair, ou « Générique »">
+          <datalist id="airline-names">
+            <option v-for="a in AIRLINES" :key="a.icao" :value="a.name" />
+          </datalist>
+        </div>
+      </div>
 
       <div class="field">
-        <span class="field__label">Codes ICAO compagnie (début du callsign : RYR pour RYR4KJ)</span>
+        <span class="field__label">Codes ICAO compagnie <span class="field__optional">(début du callsign : RYR pour RYR4KJ)</span></span>
         <CodesInput
           v-model="form.airlines"
           list-id="airline-codes"
@@ -99,18 +109,28 @@ async function remove() {
         <span class="field__hint">Aucun code : checklist générique de la famille.</span>
       </div>
 
-      <label class="checkbox">
+      <label class="switch">
         <input v-model="form.isDefault" type="checkbox">
-        Checklist par défaut de la famille (quand la compagnie du vol n'a pas la sienne)
+        <span class="switch__track"></span>
+        <span class="switch__label">
+          Checklist par défaut de la famille
+          <small>Affichée quand la compagnie du vol n'a pas la sienne</small>
+        </span>
       </label>
 
-      <p v-if="localError || store.error.value" class="status status--error">{{ localError || store.error.value }}</p>
+      <p v-if="localError || store.error.value" class="status status--error" role="alert">
+        <AdminIcon name="alert" :size="16" />
+        {{ localError || store.error.value }}
+      </p>
 
-      <div class="form__actions">
-        <button v-if="checklist" type="button" class="button button--danger" :disabled="store.saving.value" @click="remove">Supprimer</button>
-        <span class="form__spacer" />
-        <button type="button" class="button button--ghost" @click="emit('close')">Annuler</button>
-        <button type="submit" class="button" :disabled="store.saving.value">
+      <div class="dialog__actions">
+        <button v-if="checklist" type="button" class="btn btn--danger" :disabled="store.saving.value" @click="remove">
+          <AdminIcon name="trash" :size="18" />
+          Supprimer
+        </button>
+        <span class="dialog__spacer"></span>
+        <button type="button" class="btn btn--ghost" @click="emit('close')">Annuler</button>
+        <button type="submit" class="btn btn--primary" :disabled="store.saving.value">
           {{ store.saving.value ? 'Envoi…' : 'Enregistrer' }}
         </button>
       </div>

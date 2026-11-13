@@ -1,6 +1,7 @@
 <script setup>
 // Saisie d'une liste de codes (codes ICAO compagnie, types d'avion) sous forme de pastilles.
 import { ref, computed } from 'vue';
+import AdminIcon from './AdminIcon.vue';
 
 const props = defineProps({
   // Liste proposée à l'autocomplétion : [{ code, name }]
@@ -50,7 +51,9 @@ function onBackspace() {
     <div class="codes__box">
       <span v-for="code in codes" :key="code" class="chip" :title="nameOf.get(code)">
         {{ code }}
-        <button type="button" class="chip__remove" :aria-label="`Retirer ${code}`" @click="remove(code)">✕</button>
+        <button type="button" class="chip__remove" :aria-label="`Retirer ${code}`" @click="remove(code)">
+          <AdminIcon name="close" :size="12" />
+        </button>
       </span>
       <input
         v-model="draft"
@@ -71,7 +74,7 @@ function onBackspace() {
       <button v-for="code in pending" :key="code" type="button" class="chip chip--suggestion" :title="nameOf.get(code)" @click="add(code)">
         + {{ code }}
       </button>
-      <button v-if="pending.length > 1" type="button" class="link-button" @click="add(pending.join(' '))">tout ajouter</button>
+      <button v-if="pending.length > 1" type="button" class="link-btn" @click="add(pending.join(' '))">tout ajouter</button>
     </div>
   </div>
 </template>

@@ -2,6 +2,7 @@
 import { ref, computed } from 'vue';
 import BaseDialog from './BaseDialog.vue';
 import CodesInput from './CodesInput.vue';
+import AdminIcon from './AdminIcon.vue';
 import { useAdminStore } from '../../composables/useAdminStore.js';
 
 const props = defineProps({
@@ -31,35 +32,43 @@ async function remove() {
 </script>
 
 <template>
-  <BaseDialog :title="family ? `Modifier « ${family.name} »` : 'Ajouter une famille d\'avion'" @close="emit('close')">
-    <form class="form" @submit.prevent="submit">
-      <label class="field">
-        <span class="field__label">Nom</span>
-        <input v-model="form.name" class="field__control" placeholder="Airbus A330">
-      </label>
-
+  <BaseDialog
+    :title="family ? `Modifier « ${family.name} »` : `Ajouter une famille d'avion`"
+    subtitle="Un vol SimBrief avec un de ces types utilise les checklists de la famille."
+    @close="emit('close')"
+  >
+    <form class="fields" @submit.prevent="submit">
       <div class="field">
-        <span class="field__label">Types ICAO SimBrief (aircraft.icaocode)</span>
-        <CodesInput v-model="form.types" list-id="aircraft-types" placeholder="A332, A333, A339" />
-        <span class="field__hint">Entrée après chaque type. Un vol avec un de ces types utilise les checklists de cette famille.</span>
+        <label class="field__label" for="family-name">Nom</label>
+        <input id="family-name" v-model="form.name" class="input" placeholder="Airbus A330">
       </div>
 
-      <p v-if="localError || store.error.value" class="status status--error">{{ localError || store.error.value }}</p>
+      <div class="field">
+        <span class="field__label">Types ICAO SimBrief <span class="field__optional">(aircraft.icaocode)</span></span>
+        <CodesInput v-model="form.types" list-id="aircraft-types" placeholder="A332, A333, A339" />
+        <span class="field__hint">Entrée après chaque type.</span>
+      </div>
 
-      <div class="form__actions">
+      <p v-if="localError || store.error.value" class="status status--error" role="alert">
+        <AdminIcon name="alert" :size="16" />
+        {{ localError || store.error.value }}
+      </p>
+
+      <div class="dialog__actions">
         <button
           v-if="family"
           type="button"
-          class="button button--danger"
+          class="btn btn--danger"
           :disabled="store.saving.value || !isEmpty"
-          :title="isEmpty ? '' : 'Supprime d\'abord ses checklists'"
+          :title="isEmpty ? '' : `Supprime d'abord ses checklists`"
           @click="remove"
         >
+          <AdminIcon name="trash" :size="18" />
           Supprimer
         </button>
-        <span class="form__spacer" />
-        <button type="button" class="button button--ghost" @click="emit('close')">Annuler</button>
-        <button type="submit" class="button" :disabled="store.saving.value">
+        <span class="dialog__spacer"></span>
+        <button type="button" class="btn btn--ghost" @click="emit('close')">Annuler</button>
+        <button type="submit" class="btn btn--primary" :disabled="store.saving.value">
           {{ store.saving.value ? 'Envoi…' : 'Enregistrer' }}
         </button>
       </div>

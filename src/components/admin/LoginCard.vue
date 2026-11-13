@@ -1,6 +1,8 @@
 <script setup>
 import { ref } from 'vue';
 import { useAdminStore } from '../../composables/useAdminStore.js';
+import AdminIcon from './AdminIcon.vue';
+import logo from '../../img/logo.webp';
 
 const store = useAdminStore();
 const username = ref('');
@@ -17,23 +19,35 @@ async function submit() {
 </script>
 
 <template>
-  <form class="panel login" @submit.prevent="submit">
-    <h2 class="panel__title">Connexion</h2>
-    <label class="field">
-      <span class="field__label">Login</span>
-      <input v-model="username" class="field__control" autocomplete="username" autofocus>
-    </label>
-    <label class="field">
-      <span class="field__label">Mot de passe</span>
-      <input v-model="password" class="field__control" type="password" autocomplete="current-password">
-    </label>
-    <label class="checkbox">
-      <input v-model="remember" type="checkbox">
-      Rester connecté sur ce navigateur
-    </label>
-    <p v-if="store.error.value" class="status status--error">{{ store.error.value }}</p>
-    <button type="submit" class="button" :disabled="!username || !password || checking">
-      {{ checking ? 'Connexion…' : 'Se connecter' }}
-    </button>
-  </form>
+  <div class="login">
+    <form class="login__card" @submit.prevent="submit">
+      <img class="login__logo" :src="logo" alt="" width="56" height="56">
+      <div class="login__heading">
+        <h1 class="login__title">Administration</h1>
+        <p class="login__subtitle">Connecte-toi pour gérer les checklists du stream.</p>
+      </div>
+      <div class="fields">
+        <div class="field">
+          <label class="field__label" for="admin-login">Login</label>
+          <input id="admin-login" v-model="username" class="input" autocomplete="username" autofocus>
+        </div>
+        <div class="field">
+          <label class="field__label" for="admin-password">Mot de passe</label>
+          <input id="admin-password" v-model="password" class="input" type="password" autocomplete="current-password">
+        </div>
+        <label class="switch">
+          <input v-model="remember" type="checkbox">
+          <span class="switch__track"></span>
+          <span class="switch__label">Rester connecté sur ce navigateur</span>
+        </label>
+      </div>
+      <button type="submit" class="btn btn--primary btn--block" :disabled="!username || !password || checking">
+        {{ checking ? 'Connexion…' : 'Se connecter' }}
+      </button>
+      <p v-if="store.error.value" class="status status--error" role="alert">
+        <AdminIcon name="alert" :size="16" />
+        {{ store.error.value }}
+      </p>
+    </form>
+  </div>
 </template>

@@ -1,0 +1,42 @@
+/* ==========================================================================
+   Connexion
+   ========================================================================== */
+.login {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: 1.5rem;
+}
+
+.login__card {
+  backdrop-filter: blur(16px);
+  background: rgba(18, 18, 18, .9);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-xl);
+  box-shadow: 0 2rem 5rem rgba(0, 0, 0, .55);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 2.5rem 2rem 2rem;
+  width: min(26rem, 100%);
+}
+
+.login__logo {
+  border-radius: var(--r-md);
+  height: 3.5rem;
+  object-fit: contain;
+  width: 3.5rem;
+}
+
+.login__title {
+  font-size: 1.6rem;
+  font-weight: 600;
+}
+
+.login__subtitle {
+  color: var(--muted);
+  font-size: .95rem;
+  margin-top: .3rem;
+}

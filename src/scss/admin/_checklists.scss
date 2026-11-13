@@ -1,0 +1,155 @@
+/* ==========================================================================
+   Page d'une famille d'avion (FamilyPage.vue)
+   ========================================================================== */
+.family {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.family__info {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  justify-content: space-between;
+}
+
+.family__types {
+  display: flex;
+  flex-direction: column;
+  gap: .6rem;
+}
+
+.family__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+}
+
+.checklist-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(min(13rem, 100%), 1fr));
+}
+
+/* Carte d'une checklist (ChecklistCard.vue) */
+.checklist {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  padding: 0;
+  transition: border-color .15s, transform .15s;
+
+  &:hover {
+    border-color: var(--border-strong);
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 599px) { padding: 0; }
+}
+
+.checklist__thumb {
+  aspect-ratio: 3 / 4;
+  background: var(--field);
+  border-bottom: 1px solid var(--border);
+  display: block;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+
+  img {
+    height: 100%;
+    object-fit: contain;
+    transition: transform .2s;
+    width: 100%;
+  }
+
+  &:hover img { transform: scale(1.03); }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: -2px;
+  }
+}
+
+.checklist__default {
+  // Fond opaque : le badge reste lisible sur les images claires.
+  background: rgba(18, 18, 18, .88);
+  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .35);
+  left: .65rem;
+  position: absolute;
+  top: .65rem;
+}
+
+.checklist__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: .6rem;
+  padding: 1rem 1rem .5rem;
+}
+
+.checklist__title { font-weight: 600; }
+
+.checklist__actions {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  padding: .25rem .5rem .6rem;
+}
+
+/* ==========================================================================
+   Tester un vol (TestPanel.vue)
+   ========================================================================== */
+.test--page {
+  align-items: start;
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 22rem);
+
+  @media (max-width: 1099px) { grid-template-columns: minmax(0, 1fr); }
+}
+
+.test__result {
+  align-items: center;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.25rem;
+  padding: .75rem;
+
+  &--empty .test__label { color: var(--danger); }
+}
+
+.test__thumb {
+  border-radius: var(--r-sm);
+  flex-shrink: 0;
+  object-fit: cover;
+  width: 3.5rem;
+
+  &--empty {
+    align-items: center;
+    aspect-ratio: 1;
+    background: var(--danger-bg);
+    color: var(--danger);
+    display: flex;
+    justify-content: center;
+  }
+}
+
+.test__label { font-weight: 600; }
+
+.test__reason {
+  color: var(--muted);
+  font-size: .85rem;
+}
+
+.test__preview {
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  width: 100%;
+}

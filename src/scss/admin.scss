@@ -1,10 +1,12 @@
 // Interface d'administration (admin.html). Aucun style dans les composants : tout est ici.
+// Design repris de l'admin du site Skyflyer Aviation (src/admin/admin.scss).
 @use 'admin/base';
 @use 'admin/layout';
+@use 'admin/components';
 @use 'admin/forms';
 @use 'admin/chips';
-@use 'admin/panels';
-@use 'admin/family';
-@use 'admin/card';
+@use 'admin/overview';
+@use 'admin/checklists';
 @use 'admin/dialog';
 @use 'admin/dropzone';
+@use 'admin/login';

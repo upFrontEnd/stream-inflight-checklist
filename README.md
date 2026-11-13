@@ -143,11 +143,13 @@ src/
 ├── admin/                     AdminApp.vue + main.js
 ├── components/
 │   ├── overlay/               ChecklistImage, DebugPanel
-│   └── admin/                 LoginCard, TestPanel, FamilySection, ChecklistCard,
-│                              ChecklistDialog, FamilyDialog, BaseDialog, ImageDrop, CodesInput
+│   └── admin/                 LoginCard, AdminOverview, FamilyPage, TestPanel, ChecklistCard,
+│                              ChecklistDialog, FamilyDialog, BaseDialog, ImageDrop, CodesInput,
+│                              AdminIcon (icônes SVG inline)
 ├── composables/
 │   ├── useChecklist.js        Overlay : relecture SimBrief + liste, choix, cache
-│   └── useAdminStore.js       Admin : état partagé et actions (commit GitHub)
+│   ├── useAdminStore.js       Admin : état partagé et actions (commit GitHub)
+│   └── useAdminNav.js         Admin : page affichée, reflétée dans l'ancre de l'URL
 ├── lib/
 │   ├── select.js              Règles de choix (overlay, admin, bun run check)
 │   ├── github.js              API GitHub : jeton, lecture, commit unique
@@ -156,13 +158,15 @@ src/
 │   ├── simbrief.js            Lecture du plan SimBrief
 │   ├── airlines.js            Compagnies connues (code ICAO → nom)
 │   └── slug.js
-├── img/logo.png
+├── img/                       logo.webp, admin-bg.webp (fond de l'admin)
+├── fonts/Inter-Variable.woff2  Police de l'admin
 └── scss/
     ├── overlay.scss / admin.scss   Points d'entrée
     ├── _variables.scss              Cadre de la checklist, fondu
     ├── overlay/                     _base, _checklist, _debug
-    └── admin/                       _base, _layout, _forms, _chips, _panels,
-                                     _family, _card, _dialog, _dropzone
+    └── admin/                       _base, _layout, _components, _forms, _chips,
+                                     _overview, _checklists, _dialog, _dropzone, _login
+                                     (design repris de l'admin du site Skyflyer Aviation)
 scripts/
 ├── import-dropbox.js          Import initial depuis le Dropbox (sharp)
 ├── admin-password.js          Login / mot de passe de l'admin
