@@ -88,6 +88,7 @@ function closeDialog() {
 }
 
 const overlayUrl = './';
+const siteAdminUrl = 'https://www.skyflyer-aviation.com/admin.html';
 
 onMounted(store.load);
 </script>
@@ -138,6 +139,10 @@ onMounted(store.load);
           <a class="sidebar__link" :href="overlayUrl" target="_blank" rel="noopener">
             <AdminIcon name="external" class="sidebar__icon" />
             <span>Voir la checklist active</span>
+          </a>
+          <a class="sidebar__link" :href="siteAdminUrl">
+            <AdminIcon name="home" class="sidebar__icon" />
+            <span>Retour à l'admin du site</span>
           </a>
           <div class="sidebar__user">
             <span class="sidebar__avatar" aria-hidden="true">S</span>

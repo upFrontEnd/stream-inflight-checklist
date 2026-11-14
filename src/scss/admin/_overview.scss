@@ -42,9 +42,19 @@
   line-height: 1.1;
 }
 
+.stat__foot {
+  align-items: center;
+  display: flex;
+  gap: .6rem;
+  min-width: 0;
+}
+
 .stat__hint {
   color: var(--muted);
   font-size: .9rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .overview__grid {
